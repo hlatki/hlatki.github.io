@@ -57,6 +57,13 @@ ul.posts li a { font-weight:200;}
     margin-bottom:10px;
 }
 
+div#post > div {
+    margin-bottom: 150px;
+}
+
+div#post > div.pager-left {
+    margin: 0;
+}
 blockquote {
     font-size:1.0em;
     margin:20px 10px;
@@ -128,7 +135,7 @@ h1 a {
 .publish_date {
     margin-top:-8px;
     margin-bottom:0px;
-    text-align:right;
+    text-align:left;
     font-size:0.8em;
     width:800px;
     color: gray;
