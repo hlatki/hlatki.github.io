@@ -4,7 +4,8 @@
  :author-name "Hannah Atkinson"
  :in-dir "resources/"
  :out-dir "html/"
- :create-archives true
  :default-template "default.clj"
  :encoding "UTF-8"
- :blog-as-index true]
+ :atmoic-build true
+ :blog-as-index true
+ :create-archives false]

@@ -35,7 +35,8 @@
     [:div
      {:class "pages"}
      [:ul 
-      [:li [:a {:href "http://hannah.io", :class "page"} "Home"]] 
+      [:li [:a {:href "/", :class "page"} "Home"]] 
+      [:li [:a {:href "/about.html", :class "page"} "About"]] 
       [:li [:a {:href "https://github.com/hlatki", :class "page"} "GitHub"]] 
       [:li [:a {:href "https://twitter.com/hlatkin", :class "page"} "Twitter"]]]
 
