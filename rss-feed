@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<rss version="2.0"><channel><title>hannah.io</title><link>http://blog.hannah.io</link><description>Notes on code and such</description><item><title>Quick API Prototypes with Node.js and Express</title><link>http://blog.hannah.io/2014/02/18/quick-api-prototypes-with-nodejs-express/</link><pubDate>Tue, 18 Feb 2014 00:00:00 -0500</pubDate><description>&lt;p&gt;You have an idea and want to stub out a quick REST API to test it out. So you reach for C++ and -- haha, of course you don't because that would be crazy (I see you over there, Java, and no, back into the corner you go). Node.js is my goto solution in situations like this.&lt;/p&gt;&lt;p&gt;A few days ago I was doing some early Spring cleaning and found some old code from when I was first experimenting with &lt;a href=&quot;http://backbonejs.org/&quot;&gt;Backbone.js&lt;/a&gt;. Backbone's &lt;a href=&quot;http://backbonejs.org/#Sync&quot;&gt;sync&lt;/a&gt; makes it super easy to persist data; you might not even have to configure routes if your API is already RESTful. I, however, did not have a RESTful API. I had a silly little kanban style todo list running in my browser. Node.js to the rescue!&lt;/p&gt;&lt;p&gt;Node is great. But out of the box, manipulating HTTP requests and responses is a little less abstract than we want for prototyping an API. That's where &lt;a href=&quot;http://expressjs.com/&quot;&gt;Express&lt;/a&gt; comes in. Express is a web application framework for Node, and it makes set up routes a piece of cake.&lt;/p&gt;&lt;p&gt;First, (and assuming you already have Node installed), let's install Express:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;prettyprint&quot;&gt;npm install express --save
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;If you already have a &lt;code&gt;package.json&lt;/code&gt; file in your project directory, the &lt;code&gt;--save&lt;/code&gt; flag will add Express to your dependencies.&lt;/p&gt;&lt;p&gt;Now let's make a simple REST API for some to-do items. Since this is just for testing purposes, we'll use an array instead of a fancy database to hold our data. Note that the following example is extremely crude, and is totally lacking in any sort of error checking. However, I think it shows how quickly you can get a somewhat useful &quot;fake&quot; backend up and running.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;prettyprint&quot;&gt;&lt;br/&gt;var express = require(&amp;#39;express&amp;#39;),
+app = express(),
+PORT = 8008;
+//array of tasks
+var tasks = [{id: 0, title: &amp;quot;Learn more about Backbone&amp;quot;, description:&amp;quot;Do research on best practices&amp;quot;, col: &amp;quot;inProgress&amp;quot;},
+{id: 1, title: &amp;quot;Get Drag and Drop to work&amp;quot;, col:&amp;quot;completed&amp;quot;},
+{id: 2, title: &amp;quot;Experiment with local storage for tasks&amp;quot;, col: &amp;quot;completed&amp;quot;}];
+
+/*
+ * REST TIME!!
+ */
+//Get some JSON
+app.get(&amp;#39;/api/tasks&amp;#39;, function(req, res){
+        console.log(&amp;#39;GET /api/tasks&amp;#39;);
+        console.log(tasks);
+        res.send(tasks);
+});
+//get a particular task
+app.get(&amp;#39;/api/tasks/:id&amp;#39;, function(req,res){
+        var id = req.params.id;
+        console.log(&amp;#39;getting task &amp;#39; + id);
+        res.send(tasks[id]);
+});
+//add a task
+app.post(&amp;#39;/api/tasks&amp;#39;, function(req,res){
+        var task = req.body;
+        task.id = tasks.length;
+        console.log(req.body);
+        console.log(&amp;#39;adding task: &amp;#39; + task);
+        tasks.push(task);
+        console.log(tasks);
+});
+
+//update a task
+app.put(&amp;#39;/api/tasks/:id&amp;#39;, function(req,res){
+        var id = req.params.id;
+        var task = req.body;
+        console.log(&amp;#39;updating task &amp;#39; + id + &amp;#39; to &amp;#39; + JSON.stringify(task));
+        tasks[id] = task;
+        console.log(tasks);
+});
+app.listen(PORT);
+console.log(&amp;#39;Listening on port &amp;#39; + PORT);
+
+&lt;/code&gt;&lt;/pre&gt;</description></item><item><title>Octopress: It's not you, It's me</title><link>http://blog.hannah.io/2013/12/08/moving-to-a-new-static-site-generator/</link><pubDate>Sun, 8 Dec 2013 00:00:00 -0500</pubDate><description>&lt;p&gt;I started this blog back in April because I enjoy writing and also because I think that keeping track of what I'm thinking about and working on could be useful in the future (&quot;How do I get those routes to work in Compojure?&quot;). However, I've only managed to make one post. Although this is a pretty standard for any new journal or blog, I've decided another key reason is that I've spent way too much time trying to get Octopress to work correctly. Now that's not quite fair since I think the root cause probably has more to do with Ruby Version Manager and my poor installation thereof, but the fact remains that whenever I've started to write a new post I've ended up off in the weeds fighting with Ruby or messing with Octopress's configuration.&lt;/p&gt;&lt;p&gt;Octopress is a cool piece of software, but I really don't need all of its power. I just want a straightforward static site generator that parses markdown, and I hope that I've found it in &lt;a href=&quot;https://github.com/nakkaya/static&quot;&gt;nakkaya's Static&lt;/a&gt;, a static site generator written in Clojure. &lt;/p&gt;&lt;p&gt;Here's to posting more frequently!&lt;/p&gt;</description></item><item><title>A Note About Node War</title><link>http://blog.hannah.io/2013/04/13/a-note-about-node-war/</link><pubDate>Sat, 13 Apr 2013 00:00:00 -0400</pubDate><description>&lt;p&gt;A few days ago there was a &lt;a href=&quot;https://news.ycombinator.com/item?id=5532360&quot;&gt;post on Hacker News&lt;/a&gt; about a new site called &lt;a href=&quot;http://nodewar.com&quot;&gt;Nodewar&lt;/a&gt; where you program little fleets of JavaScript powered space bots and battle other programmers for a 10 bitcoin prize. The battles take place in an arena containing three unstable moons that will devour unwary ships, not to mention the opposition fleet laying in wait behind them. Each fleet consists of a queen ship and several drones. Combat happens by slamming your ships into the opposition -- if they impact properly, the enemy ship will split into two pieces, the smaller of which becomes one of your ships.&lt;/p&gt;&lt;p&gt;One of the owners of the site wrote one of the initially successfully teams, &lt;a href=&quot;http://nodewar.com/the/spinara&quot;&gt;The Spinara&lt;/a&gt;. They try to fly away from all threats (some categories like the dread moons are given a larger weight, and thus more leeway). This rudimentary navigation system seems to be the basis for many of top teams. I based my first attempt, &lt;a href=&quot;http://nodewar.com/the/flailbeans&quot;&gt;The FlailBeans&lt;/a&gt;, on a descendent of The Spinara called &lt;a href=&quot;http://nodewar.com/the/ripoffs&quot;&gt;The Ripoffs&lt;/a&gt; whose primary innovations were to change the weighting such that the enemy queen is targeted and to introduce an aggressiveness factor. My chief &quot;improvement&quot; was reading the docs and noticing that smaller ships are faster, so I thought I would try to make these speedy little splinters into divebombers. To do this, I multiplied the aggressiveness constant by the inverse of a ship's weight. This seems to be working reasonably well, although I doubt that the FlailBeans will continue to be ranked so highly since they still use the standard simple targeting method and so have a tendency to miss the queen and careen off the map. Ideally, I would like my ships to curve around the edge of the map and dive down onto the enemy queen and force it off the map via an improved targeting mechanism, but I think I'll have to leave that endeavor to those who have a firmer grasp of physics.&lt;/p&gt;&lt;p&gt;One of the most interesting things about Nodewar is that you can code your ships in either CoffeeScript or JavaScript. Since the basis for the FlailBeans was written in CoffeeScript, I ended up learning a bit about it, and despite some initial doubts (what do you mean I have to indent that!), I think that I really like CoffeeScript. Although I really do like JavaScript, I do feel that sometimes the language can get in the way of immediate comprehension. However, I think I'm much more excited about the possible addition of ClojureScript to the menu.&lt;/p&gt;&lt;p&gt;One more thing I wanted to discuss is the fact that you can make your code public. Despite the obvious incentive not to do this (I imagine it would be a bit annoying to have your team in the top spot and then be usurped by your own code + some minor optimizations), I would love to see how the teams evolve over time and which strategy is ultimately the most successful.&lt;/p&gt;</description></item></channel></rss>

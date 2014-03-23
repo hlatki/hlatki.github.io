@@ -1,0 +1,63 @@
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"><head><meta content="text/html; charset=UTF-8" http-equiv="content-type" /><meta name="description" /><meta content="JavaScript NodeJS API" name="keywords" /><meta content="Hannah Atkinson" name="author" /><link href="images/favicon.ico" rel="icon" type="image/x-icon" /><link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" /><script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+<link rel="stylesheet" href="/style/compiled.min.css">
+<link href="/rss-feed" rel="alternate" title="hannah.io" type="application/rss+xml" /><link href="http://hannah.io/2014/02/18/quick-api-prototypes-with-nodejs-express/" rel="canonical" /><title>Quick API Prototypes with Node.js and Express</title></head><body><div class="container"><div class="header"><h1><a href="http://hannah.io">hannah.io</a></h1><ul class="nav-links"><li><a class="page" href="/">Home</a></li><li><a class="page" href="/about.html">About</a></li><li><a class="page" href="https://github.com/hlatki">GitHub</a></li><li><a class="page" href="https://twitter.com/hlatkin">Twitter</a></li></ul></div><div class="content"><div class="post"><h2 class="page-title">Quick API Prototypes with Node.js and Express</h2><p>You have an idea and want to stub out a quick REST API to test it out. So you reach for C++ and -- haha, of course you don't because that would be crazy (I see you over there, Java, and no, back into the corner you go). Node.js is my goto solution in situations like this.</p><p>A few days ago I was doing some early Spring cleaning and found some old code from when I was first experimenting with <a href="http://backbonejs.org/">Backbone.js</a>. Backbone's <a href="http://backbonejs.org/#Sync">sync</a> makes it super easy to persist data; you might not even have to configure routes if your API is already RESTful. I, however, did not have a RESTful API. I had a silly little kanban style todo list running in my browser. Node.js to the rescue!</p><p>Node is great. But out of the box, manipulating HTTP requests and responses is a little less abstract than we want for prototyping an API. That's where <a href="http://expressjs.com/">Express</a> comes in. Express is a web application framework for Node, and it makes set up routes a piece of cake.</p><p>First, (and assuming you already have Node installed), let's install Express:</p>
+<pre><code class="prettyprint">npm install express --save
+</code></pre><p>If you already have a <code>package.json</code> file in your project directory, the <code>--save</code> flag will add Express to your dependencies.</p><p>Now let's make a simple REST API for some to-do items. Since this is just for testing purposes, we'll use an array instead of a fancy database to hold our data. Note that the following example is extremely crude, and is totally lacking in any sort of error checking. However, I think it shows how quickly you can get a somewhat useful "fake" backend up and running.</p>
+<pre><code class="prettyprint"><br/>var express = require(&#39;express&#39;),
+app = express(),
+PORT = 8008;
+//array of tasks
+var tasks = [{id: 0, title: &quot;Learn more about Backbone&quot;, description:&quot;Do research on best practices&quot;, col: &quot;inProgress&quot;},
+{id: 1, title: &quot;Get Drag and Drop to work&quot;, col:&quot;completed&quot;},
+{id: 2, title: &quot;Experiment with local storage for tasks&quot;, col: &quot;completed&quot;}];
+
+/*
+ * REST TIME!!
+ */
+//Get some JSON
+app.get(&#39;/api/tasks&#39;, function(req, res){
+        console.log(&#39;GET /api/tasks&#39;);
+        console.log(tasks);
+        res.send(tasks);
+});
+//get a particular task
+app.get(&#39;/api/tasks/:id&#39;, function(req,res){
+        var id = req.params.id;
+        console.log(&#39;getting task &#39; + id);
+        res.send(tasks[id]);
+});
+//add a task
+app.post(&#39;/api/tasks&#39;, function(req,res){
+        var task = req.body;
+        task.id = tasks.length;
+        console.log(req.body);
+        console.log(&#39;adding task: &#39; + task);
+        tasks.push(task);
+        console.log(tasks);
+});
+
+//update a task
+app.put(&#39;/api/tasks/:id&#39;, function(req,res){
+        var id = req.params.id;
+        var task = req.body;
+        console.log(&#39;updating task &#39; + id + &#39; to &#39; + JSON.stringify(task));
+        tasks[id] = task;
+        console.log(tasks);
+});
+app.listen(PORT);
+console.log(&#39;Listening on port &#39; + PORT);
+
+</code></pre><div class="post-tags">Tags: <a href="/tags/#JavaScript">JavaScript </a><a href="/tags/#NodeJS">NodeJS </a><a href="/tags/#API">API </a></div></div><div id="disqus"><div id="disqus_thread"></div><script type="text/javascript" src="http://disqus.com/forums/hannahio/embed.js"></script><noscript><a href="http://disqus.com/forums/hannahio/?url=ref">View the discussion thread.</a></noscript><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a></div></div><div class="footer"><ul class="nav-links"><li>&copy; 2013<a href="http://hannah.io"> Hannah Atkinson</a></li><li><a href="/rss-feed">RSS Feed</a></li><li><a href="/colophon.html">Colophon</a></li></ul></div></div><script type="text/javascript">
+    //<![CDATA[
+    (function() {
+    var links = document.getElementsByTagName('a');
+    var query = '?';
+    for(var i = 0; i < links.length; i++) {
+    if(links[i].href.indexOf('#disqus_thread') >= 0) {
+    query += 'url' + i + '=' + encodeURIComponent(links[i].href) + '&';
+    }
+    }
+    document.write('<script charset="utf-8" type="text/javascript" src="http://disqus.com/forums/hannahio/get_num_replies.js' + query + '"></' + 'script>');
+    })();
+    //]]>
+    </script></body></html>
